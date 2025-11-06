@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Tar;
 
 namespace HtmlMinifier;
 
@@ -190,7 +192,34 @@ minifyFile(inputPath, outputPath);
 
         return string.Empty;
     }
+    public static void CompressFile(string inputFilePath, string outputFilePath)
+    {
+        if (!File.Exists(inputFilePath))
+        {
+            Console.WriteLine("Input file does not exist.");
+            return;
+        }
 
+        // Создание Gzip TAR
+        CreateTarGZ(outputFilePath, inputFilePath);
+        
+        Console.WriteLine("Compression successful!");
+       
+    }
+    
+    private static void CreateTarGZ(string tgzFilename, string fileName)
+    {
+        using (var outStream = File.Create(tgzFilename))
+        using (var gzoStream = new GZipOutputStream(outStream))
+        using (var tarArchive = TarArchive.CreateOutputTarArchive(gzoStream))
+        {
+            tarArchive.RootPath = Path.GetDirectoryName(fileName);
+            var tarEntry = TarEntry.CreateEntryFromFile(fileName);
+            tarEntry.Name = Path.GetFileName(fileName);
+            tarArchive.WriteEntry(tarEntry, true);
+        }
+    }
+    
     public string CreateScriptsJs(string inFilePath, string directoryCache, string sotorageNodeScriptJs)
     {
         string content = "";

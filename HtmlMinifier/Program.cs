@@ -16,6 +16,11 @@ internal class Program
        // NodeRunner.InstallPackages("html-minifier terser" , sotorageDirectoryScript);
         
         string outputCppHFile = "C:\\Users\\UnderKo\\Documents\\PlatformIO\\Projects\\ESP32WebPanel\\include\\webui.h";
+        string outputCppHFilegz = "C:\\Users\\UnderKo\\Documents\\PlatformIO\\Projects\\ESP32WebPanel\\data\\index.html.gz";
+        string outputCppHFileIndexHtml = "C:\\Users\\UnderKo\\Documents\\PlatformIO\\Projects\\ESP32WebPanel\\include\\index.html";
+        
+        
+        
         string outputHtmlViewTest = Path.GetFullPath("test.html");
         if (!Directory.Exists(sotorageDirectoryScript))
         {
@@ -33,6 +38,8 @@ internal class Program
 
         void Build()
         {
+            
+            Thread.Sleep(100);
             var pathMiniJs = nodeRunner.CreateScriptsJs(inputPath, directoryCache, sotorageNodeScriptJs);
             nodeRunner.RunNodeScript(sotorageNodeScriptJs);
             var pathMiniHtml = nodeRunner.CreateScriptsHtml(inputPath, directoryCache, sotorageNodeScriptHtml);
@@ -41,6 +48,12 @@ internal class Program
             
             string code = nodeRunner.CopressCode(pathMiniJs, pathMiniHtml);
             File.WriteAllText(outputCppHFile, nodeRunner.GetCppH(code));
+            
+            
+            File.WriteAllText(outputCppHFileIndexHtml, code);
+
+                //NodeRunner.CompressFile(outputCppHFileIndexHtml, outputCppHFilegz);
+
 
         }
 
