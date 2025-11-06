@@ -1,14 +1,20 @@
-﻿using HtmlMinifier;
+﻿using System.Diagnostics;
+using HtmlMinifier;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
+        
+        
+        
         var nodeRunner = new NodeRunner();
         var sotorageDirectoryScript = Path.GetFullPath("Scripts");
         var directoryCache = Path.GetFullPath("cache");
 
-
+        
+       // NodeRunner.InstallPackages("html-minifier terser" , sotorageDirectoryScript);
+        
         string outputCppHFile = "C:\\Users\\UnderKo\\Documents\\PlatformIO\\Projects\\ESP32WebPanel\\include\\webui.h";
         string outputHtmlViewTest = Path.GetFullPath("test.html");
         if (!Directory.Exists(sotorageDirectoryScript))

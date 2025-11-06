@@ -5,6 +5,8 @@ namespace HtmlMinifier;
 
 public class NodeRunner
 {
+    
+     
     public bool ReadFile(string filePath, ref string content, ref string directoryFile)
     {
         try
@@ -129,6 +131,7 @@ fs.readFile(inFile, 'utf8', function (err, data) {
 
 const fs = require('fs').promises;
 const { minify } = require('terser');
+ 
 
 async function minifyFile(inputFilePath, outputFilePath) {
     try {
@@ -238,18 +241,54 @@ minifyFile(inputPath, outputPath);
 
         return string.Empty;
     }
-
-
-    public void RunNodeScript(string scriptPath, string nodePath = "node.exe")
+    
+    
+    static string GetNodePath()
     {
+        try
+        {
+            // Создаем процесс для выполнения команды 'where npm' в Windows
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "where",
+                Arguments = "node",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (var process = Process.Start(processStartInfo))
+            {
+                // Читаем вывод
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit(); // Ждем завершения процесса
+
+                // Возвращаем первый найденный путь
+                return output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)[0];
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Ошибка: " + ex.Message);
+            return "node.exe";
+        }
+    }
+    
+
+    public void RunNodeScript(string scriptPath)
+    {
+        string nodePath = GetNodePath();
+        
         var startInfo = new ProcessStartInfo
         {
-            FileName = nodePath,
+            FileName = GetNodePath() ?? nodePath,
             Arguments = scriptPath,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
-            CreateNoWindow = true
+            CreateNoWindow = true,
+            
         };
 
         using (var process = new Process())
