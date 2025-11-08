@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlMinifier", "HtmlMinifier\HtmlMinifier.csproj", "{164008A8-AA6D-4E76-BFB4-37522CB4EFF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlMinifierOneCs", "HtmlMinifierOneCs\HtmlMinifierOneCs.csproj", "{9ADE948A-1CB3-405D-BDC6-833EC4B8E6DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{164008A8-AA6D-4E76-BFB4-37522CB4EFF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{164008A8-AA6D-4E76-BFB4-37522CB4EFF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{164008A8-AA6D-4E76-BFB4-37522CB4EFF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ADE948A-1CB3-405D-BDC6-833EC4B8E6DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ADE948A-1CB3-405D-BDC6-833EC4B8E6DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ADE948A-1CB3-405D-BDC6-833EC4B8E6DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ADE948A-1CB3-405D-BDC6-833EC4B8E6DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

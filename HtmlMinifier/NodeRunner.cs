@@ -7,8 +7,6 @@ namespace HtmlMinifier;
 
 public class NodeRunner
 {
-    
-     
     public bool ReadFile(string filePath, ref string content, ref string directoryFile)
     {
         try
@@ -16,22 +14,19 @@ public class NodeRunner
             if (File.Exists(filePath))
             {
                 Thread.Sleep(100);
-            
+
                 directoryFile = Path.GetDirectoryName(filePath);
-            
+
                 content = File.ReadAllText(filePath);
                 return true;
             }
-            
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            
         }
-       
+
         return false;
-        
     }
 
 
@@ -40,13 +35,12 @@ public class NodeRunner
         var scripts = Regex.Matches(content, "((<script>)|(<script))[\\w\\W]+?<\\/script>").Select(a => a.Value)
             .ToList();
 
-        List<string> scriptsCode = new List<string>();
+        var scriptsCode = new List<string>();
 
         foreach (var script1 in scripts)
-        {
             if (Regex.IsMatch(script1, @"((<script>)|(<script))[\w\W]+?><\/script>"))
             {
-                string srcPath = Path.GetFullPath(
+                var srcPath = Path.GetFullPath(
                     Path.Combine(directoryFile,
                         Regex.Match(script1, @"src=?"".+?""").Value.Replace("src=\"", string.Empty)
                             .Replace("\"", string.Empty))
@@ -58,7 +52,6 @@ public class NodeRunner
             {
                 scriptsCode.Add(script1.Replace("<script>", string.Empty).Replace("</script>", string.Empty));
             }
-        }
 
         return string.Join("\n\n", scriptsCode);
     }
@@ -69,7 +62,7 @@ public class NodeRunner
         return Regex.Replace(content, "((<script>)|(<script))[\\w\\W]+?<\\/script>", string.Empty);
     }
 
-    public string GetCppH( string code )
+    public string GetCppH(string code)
     {
         return @"
 #ifndef WEBUI_H
@@ -80,7 +73,7 @@ const char* htmlContent = R""rawliteral(
 #endif
 ".Replace("{{WEBUI}}", code);
     }
-    
+
     public string GethtmlMinifierJs()
     {
         return @"
@@ -162,36 +155,33 @@ minifyFile(inputPath, outputPath);
 
     public void CopressCodeToFile(string pathMiniJs, string pathMiniHtml, string outputPath)
     {
-      
+        var contentJs = "";
+        var directoryFileJs = "";
 
-        string contentJs = "";
-        string directoryFileJs = "";
-        
-        string contentHtml = "";
-        string directoryFileHtml = "";
-        if (ReadFile(pathMiniJs, ref contentJs, ref directoryFileJs) && ReadFile(pathMiniHtml, ref contentHtml, ref directoryFileHtml))
+        var contentHtml = "";
+        var directoryFileHtml = "";
+        if (ReadFile(pathMiniJs, ref contentJs, ref directoryFileJs) &&
+            ReadFile(pathMiniHtml, ref contentHtml, ref directoryFileHtml))
         {
-            string fillHtmlCode = contentHtml.Replace("</body>", $"<script>{contentJs}</script></body>");
-            File.WriteAllText(outputPath , fillHtmlCode);
+            var fillHtmlCode = contentHtml.Replace("</body>", $"<script>{contentJs}</script></body>");
+            File.WriteAllText(outputPath, fillHtmlCode);
         }
     }
-    public string CopressCode(string pathMiniJs, string pathMiniHtml )
-    {
-      
 
-        string contentJs = "";
-        string directoryFileJs = "";
-        
-        string contentHtml = "";
-        string directoryFileHtml = "";
-        if (ReadFile(pathMiniJs, ref contentJs, ref directoryFileJs) && ReadFile(pathMiniHtml, ref contentHtml, ref directoryFileHtml))
-        {
+    public string CopressCode(string pathMiniJs, string pathMiniHtml)
+    {
+        var contentJs = "";
+        var directoryFileJs = "";
+
+        var contentHtml = "";
+        var directoryFileHtml = "";
+        if (ReadFile(pathMiniJs, ref contentJs, ref directoryFileJs) &&
+            ReadFile(pathMiniHtml, ref contentHtml, ref directoryFileHtml))
             return contentHtml.Replace("</body>", $"<script>{contentJs}</script></body>");
-            
-        }
 
         return string.Empty;
     }
+
     public static void CompressFile(string inputFilePath, string outputFilePath)
     {
         if (!File.Exists(inputFilePath))
@@ -202,11 +192,10 @@ minifyFile(inputPath, outputPath);
 
         // Создание Gzip TAR
         CreateTarGZ(outputFilePath, inputFilePath);
-        
+
         Console.WriteLine("Compression successful!");
-       
     }
-    
+
     private static void CreateTarGZ(string tgzFilename, string fileName)
     {
         using (var outStream = File.Create(tgzFilename))
@@ -219,16 +208,16 @@ minifyFile(inputPath, outputPath);
             tarArchive.WriteEntry(tarEntry, true);
         }
     }
-    
+
     public string CreateScriptsJs(string inFilePath, string directoryCache, string sotorageNodeScriptJs)
     {
-        string content = "";
-        string directoryFile = "";
+        var content = "";
+        var directoryFile = "";
         if (ReadFile(inFilePath, ref content, ref directoryFile))
         {
-            string readJsCodeFromHtmlFile = GetAllJsScripts(directoryFile, content);
-            string cacheJsAllCode = Path.GetFullPath(Path.Combine(directoryCache, "js_all_code.js"));
-            string cacheJsAllCompressCode = Path.GetFullPath(Path.Combine(directoryCache, "js_compress_all_code.js"));
+            var readJsCodeFromHtmlFile = GetAllJsScripts(directoryFile, content);
+            var cacheJsAllCode = Path.GetFullPath(Path.Combine(directoryCache, "js_all_code.js"));
+            var cacheJsAllCompressCode = Path.GetFullPath(Path.Combine(directoryCache, "js_compress_all_code.js"));
             File.WriteAllText(cacheJsAllCode, readJsCodeFromHtmlFile);
             var scriptMiniferJsContent = GetscriptMiniferJs().Replace("{{OUT_FILE}}", cacheJsAllCompressCode)
                 .Replace("{{IN_FILE}}", cacheJsAllCode).Replace(@"\", @"\\");
@@ -243,36 +232,34 @@ minifyFile(inputPath, outputPath);
 
     public string CreateScriptsHtml(string inFilePath, string directoryCache, string sotorageNodeScriptHtml)
     {
-        string content = "";
-        string directoryFile = "";
+        var content = "";
+        var directoryFile = "";
 
 
         if (ReadFile(inFilePath, ref content, ref directoryFile))
         {
-            string cacheHtmlAllCode = Path.GetFullPath(Path.Combine(directoryCache, "html_all_code.html"));
+            var cacheHtmlAllCode = Path.GetFullPath(Path.Combine(directoryCache, "html_all_code.html"));
 
 
             File.WriteAllText(cacheHtmlAllCode, RmoveAllScripts(content));
 
 
-            string cacheHtmlCompressiCode =
+            var cacheHtmlCompressiCode =
                 Path.GetFullPath(Path.Combine(directoryCache, "html_compress_all_code.html"));
 
 
-            string script = GethtmlMinifierJs().Replace("{{OUT_FILE}}", cacheHtmlCompressiCode)
+            var script = GethtmlMinifierJs().Replace("{{OUT_FILE}}", cacheHtmlCompressiCode)
                 .Replace("{{IN_FILE}}", cacheHtmlAllCode).Replace(@"\", @"\\");
             File.WriteAllText(sotorageNodeScriptHtml, script);
 
             return cacheHtmlCompressiCode;
-
-           
         }
 
         return string.Empty;
     }
-    
-    
-    static string GetNodePath()
+
+
+    private static string GetNodePath()
     {
         try
         {
@@ -290,7 +277,7 @@ minifyFile(inputPath, outputPath);
             using (var process = Process.Start(processStartInfo))
             {
                 // Читаем вывод
-                string output = process.StandardOutput.ReadToEnd();
+                var output = process.StandardOutput.ReadToEnd();
                 process.WaitForExit(); // Ждем завершения процесса
 
                 // Возвращаем первый найденный путь
@@ -303,12 +290,12 @@ minifyFile(inputPath, outputPath);
             return "node.exe";
         }
     }
-    
+
 
     public void RunNodeScript(string scriptPath)
     {
-        string nodePath = GetNodePath();
-        
+        var nodePath = GetNodePath();
+
         var startInfo = new ProcessStartInfo
         {
             FileName = GetNodePath() ?? nodePath,
@@ -316,8 +303,7 @@ minifyFile(inputPath, outputPath);
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
-            CreateNoWindow = true,
-            
+            CreateNoWindow = true
         };
 
         using (var process = new Process())
